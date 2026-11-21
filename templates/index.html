@@ -83,25 +83,6 @@
             flex-wrap: wrap;
         }
 
-        .download-btn {
-            background-color: #238636;
-            color: #ffffff !important;
-            padding: 8px 16px;
-            text-decoration: none;
-            font-weight: bold;
-            border-radius: 6px;
-            font-size: 13px;
-            display: inline-block;
-            text-transform: uppercase;
-            border: 1px solid rgba(255,255,255,0.1);
-            transition: 0.2s ease-in-out;
-        }
-
-        .download-btn:hover {
-            background-color: #2ea043;
-            transform: translateY(-1px);
-        }
-
         .card {
             background-color: #161b22;
             border: 1px solid #30363d;
@@ -428,33 +409,14 @@
     <div class="header">
         <div>
             <h1 style="font-size: 22px;">Variable Coin Protocol Center</h1>
-            <p style="color: #8b949e; margin: 0; font-size: 13px;">Bitcoin-Grade 256-Bit Cryptographic Protocol Center</p>
+            <p style="color: #8b949e; margin: 0; font-size: 13px;">
+                Local Sovereign Desktop Node (127.0.0.1)
+            </p>
         </div>
         <div class="header-controls">
             <button class="btn-blue" onclick="openWhitepaperModal()" style="width: auto; padding: 8px 16px; margin: 0; background-color: #8957e5;">WHITEPAPER</button>
-            <a href="/download" class="download-btn" title="Download standalone Windows desktop node">DOWNLOAD NODE (.ZIP)</a>
             <div id="google_translate_element"></div>
             <button class="btn-blue" onclick="refreshNetwork()" style="width: auto; padding: 8px 16px; margin: 0;">REFRESH</button>
-        </div>
-    </div>
-
-    <!-- SECURITY ADVISORY -->
-    <div id="security-advisory" style="background: rgba(22, 27, 34, 0.95); border: 1px solid #388bfd; border-left: 5px solid #238636; border-radius: 8px; padding: 14px 18px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap;">
-            <div style="flex: 1; min-width: 280px;">
-                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-                    <strong style="color: #58a6ff; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">Security &amp; Desktop Node Launch Guide (100% Open-Source &amp; Safe)</strong>
-                </div>
-                <p style="margin: 0 0 8px 0; color: #c9d1d9; font-size: 12.5px; line-height: 1.5;">
-                    Variable Coin Protocol is an independent, open-source blockchain daemon. Because standalone binaries lack commercial digital certificates, Windows Defender or antivirus programs may show standard security prompts upon initial launch. <strong>This is a false positive and completely safe.</strong>
-                </p>
-                <div style="background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 10px 12px; font-size: 12px; color: #8b949e; line-height: 1.6;">
-                    <span style="color: #d29922; font-weight: bold;">Recommended Launch Configuration:</span><br>
-                    1. <strong>Windows SmartScreen:</strong> If prompted with <em>"Windows protected your PC"</em>, click <strong>"More info"</strong> &rarr; <strong>"Run anyway"</strong>.<br>
-                    2. <strong>Windows Firewall:</strong> When the network prompt appears, check <strong>BOTH boxes</strong> (<em>Private networks</em> and <em>Public networks</em>) and click <strong>"Allow access"</strong>. If skipped or cancelled, the node automatically activates <strong>Bitcoin-style outbound sync</strong> to maintain full mining and ledger capabilities without interruption.
-                </div>
-            </div>
-            <button onclick="document.getElementById('security-advisory').style.display='none'" style="width: auto; padding: 6px 12px; margin: 0; background: #21262d; border: 1px solid #30363d; color: #c9d1d9; border-radius: 6px; font-size: 11px; cursor: pointer; white-space: nowrap;">DISMISS</button>
         </div>
     </div>
 
@@ -498,7 +460,7 @@
                     <option value="tier_30_10">Tier 4 (30 - 10 Power) (0 Units)</option>
                     <option value="tier_10_1">Tier 5 (10 - 1 Power) (0 Units)</option>
                     <option value="tier_below_1">Tier 6 (&lt;1 Floor) (0 Units)</option>
-                    <option value="any">Any / Entire Portfolio (0 Units)</option>
+                    <option value="any" selected>Any / Entire Portfolio (0 Units)</option>
                 </select>
             </div>
             <div id="cmd-scope-wrapper">
@@ -537,36 +499,39 @@
     <div class="grid-2">
         <div class="card">
             <h2>Wallet &amp; Inventory Hub</h2>
-            <button onclick="createWallet()">GENERATE 256-BIT MASTER WALLET</button>
-            
-            <div id="wallet-keys" style="display: none; margin-top: 15px;">
-                <div style="background-color: rgba(218, 54, 51, 0.1); color: #da3633; padding: 10px; border: 1px solid #da3633; border-radius: 5px; margin-bottom: 15px; font-weight: bold; text-align: center; font-size: 12px;">
-                    CRITICAL: Store your 64-character 256-bit Private Key offline securely. Copy and paste your keys into the desired sections manually.
-                </div>
-                
-                <label class="stat-label">Wallet Address (Public Key):</label>
-                <div style="display: flex; gap: 8px; margin-bottom: 12px;">
-                    <pre id="disp-pub" style="flex: 1; margin: 0;"></pre>
-                    <button class="btn-blue" onclick="copyTextContent('disp-pub', this)" style="width: auto; padding: 8px 14px; margin: 0;">COPY</button>
-                </div>
-                
-                <label class="stat-label" style="color: #da3633 !important;">256-Bit Private Key (64-Char Hex):</label>
-                <div style="display: flex; gap: 8px;">
-                    <pre id="disp-priv-key" style="color: #da3633 !important; flex: 1; margin: 0;"></pre>
-                    <button class="btn-blue" onclick="copyTextContent('disp-priv-key', this)" style="width: auto; padding: 8px 14px; margin: 0; background-color: #da3633;">COPY</button>
-                </div>
-            </div>
 
-            <hr style="border-color: #30363d; margin: 20px 0;">
-            
-            <h3>Restore Existing Wallet</h3>
-            <div style="display: flex; gap: 8px; align-items: center;">
-                <input type="text" id="rec-priv" placeholder="Paste 64-character private key here..." style="margin-bottom: 0; flex: 1;">
-                <button class="btn-blue" onclick="pasteToInput('rec-priv', this)" style="width: auto; padding: 12px 14px; margin: 0;">PASTE</button>
-            </div>
-            <button class="btn-purple" onclick="recoverWallet()" style="margin-top: 14px;">RESTORE &amp; VALIDATE WALLET</button>
+            <div>
+                <button onclick="createWallet()">GENERATE 256-BIT MASTER WALLET</button>
+                
+                <div id="wallet-keys" style="display: none; margin-top: 15px;">
+                    <div style="background-color: rgba(218, 54, 51, 0.1); color: #da3633; padding: 10px; border: 1px solid #da3633; border-radius: 5px; margin-bottom: 15px; font-weight: bold; text-align: center; font-size: 12px;">
+                        CRITICAL: Store your 64-character 256-bit Private Key offline securely. Copy and paste your keys into the desired sections manually.
+                    </div>
+                    
+                    <label class="stat-label">Wallet Address (Public Key):</label>
+                    <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                        <pre id="disp-pub" style="flex: 1; margin: 0;"></pre>
+                        <button class="btn-blue" onclick="copyTextContent('disp-pub', this)" style="width: auto; padding: 8px 14px; margin: 0;">COPY</button>
+                    </div>
+                    
+                    <label class="stat-label" style="color: #da3633 !important;">256-Bit Private Key (64-Char Hex):</label>
+                    <div style="display: flex; gap: 8px;">
+                        <pre id="disp-priv-key" style="color: #da3633 !important; flex: 1; margin: 0;"></pre>
+                        <button class="btn-blue" onclick="copyTextContent('disp-priv-key', this)" style="width: auto; padding: 8px 14px; margin: 0; background-color: #da3633;">COPY</button>
+                    </div>
+                </div>
 
-            <hr style="border-color: #30363d; margin: 20px 0;">
+                <hr style="border-color: #30363d; margin: 20px 0;">
+                
+                <h3>Restore Existing Wallet</h3>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <input type="text" id="rec-priv" placeholder="Paste 64-character private key here..." style="margin-bottom: 0; flex: 1;">
+                    <button class="btn-blue" onclick="pasteToInput('rec-priv', this)" style="width: auto; padding: 12px 14px; margin: 0;">PASTE</button>
+                </div>
+                <button class="btn-purple" onclick="recoverWallet()" style="margin-top: 14px;">RESTORE &amp; VALIDATE WALLET</button>
+
+                <hr style="border-color: #30363d; margin: 20px 0;">
+            </div>
             
             <h3>Query Ledger &amp; Inventory</h3>
             <div style="display: flex; gap: 8px; align-items: center;">
@@ -621,6 +586,7 @@
             </div>
         </div>
 
+        <!-- MINING HUB -->
         <div class="card">
             <h2>Mining Hub</h2>
             <p style="color: #8b949e; font-size: 13px;">Proof-of-work resolved across the infinite variable space. Each minted Shield Coin permanently seals its inception impact power.</p>
@@ -644,6 +610,7 @@
 
     <!-- TRANSFER & TRANSACTION HISTORY -->
     <div class="grid-2">
+        <!-- TRANSFER HUB -->
         <div class="card">
             <h2>Transfer &amp; Send Hub</h2>
             <p style="color: #8b949e; font-size: 13px;">Send Main Coin or Shield Coin units directly to another peer wallet with SECP256k1 signature verification.</p>
@@ -783,6 +750,7 @@
 
 <script>
     const API = window.location.origin;
+    const SERVER_MODE = "desktop";
     let activeAction = null;
 
     window.onload = refreshNetwork;
@@ -809,7 +777,9 @@
     }
 
     async function refreshSenderBrackets() {
-        const sender = document.getElementById('tx-sender').value.trim();
+        const senderEl = document.getElementById('tx-sender');
+        if (!senderEl) return;
+        const sender = senderEl.value.trim();
         if (!sender) return;
         try {
             const res = await fetch(`${API}/chain?address=${encodeURIComponent(sender)}`);
@@ -874,13 +844,33 @@
             const assetLabel = item.coin_type === 'SHIELD_COIN' ? 'SHIELD' : 'MAIN';
             const statusSuffix = item.status === 'PENDING' ? ' (Pending)' : '';
 
-            tr.innerHTML = `
-                <td><span class="badge ${badgeClass}">${item.type}</span></td>
-                <td style="font-weight: bold;">${assetLabel}</td>
-                <td>${item.amount}</td>
-                <td title="${item.counterparty || ''}" style="font-family: monospace; color: #8b949e !important;">${formatShortAddress(item.counterparty)}</td>
-                <td>#${item.block_index}${statusSuffix}</td>
-            `;
+            const tdType = document.createElement('td');
+            const badge = document.createElement('span');
+            badge.className = `badge ${badgeClass}`;
+            badge.innerText = item.type;
+            tdType.appendChild(badge);
+
+            const tdAsset = document.createElement('td');
+            tdAsset.style.fontWeight = 'bold';
+            tdAsset.innerText = assetLabel;
+
+            const tdAmount = document.createElement('td');
+            tdAmount.innerText = item.amount;
+
+            const tdCounterparty = document.createElement('td');
+            tdCounterparty.title = item.counterparty || '';
+            tdCounterparty.style.fontFamily = 'monospace';
+            tdCounterparty.style.setProperty('color', '#8b949e', 'important');
+            tdCounterparty.innerText = formatShortAddress(item.counterparty);
+
+            const tdBlock = document.createElement('td');
+            tdBlock.innerText = `#${item.block_index}${statusSuffix}`;
+
+            tr.appendChild(tdType);
+            tr.appendChild(tdAsset);
+            tr.appendChild(tdAmount);
+            tr.appendChild(tdCounterparty);
+            tr.appendChild(tdBlock);
             fragment.appendChild(tr);
         });
         tbody.appendChild(fragment);
@@ -906,6 +896,7 @@
         try {
             const res = await fetch(`${API}/wallet/new`);
             const data = await res.json();
+            if (!res.ok) return alert(data.error || "Wallet generation failed.");
             document.getElementById('disp-pub').innerText = data.public_key;
             document.getElementById('disp-priv-key').innerText = data.private_key; 
             document.getElementById('wallet-keys').style.display = 'block';
@@ -979,13 +970,15 @@
             const cAll = u["shield_coin_balance"] || 0;
 
             const tierSelect = document.getElementById('cmd-tier');
-            tierSelect.options[0].text = `Tier 1 (99 - 70 Power) (${c1} Units)`;
-            tierSelect.options[1].text = `Tier 2 (70 - 50 Power) (${c2} Units)`;
-            tierSelect.options[2].text = `Tier 3 (50 - 30 Power) (${c3} Units)`;
-            tierSelect.options[3].text = `Tier 4 (30 - 10 Power) (${c4} Units)`;
-            tierSelect.options[4].text = `Tier 5 (10 - 1 Power) (${c5} Units)`;
-            tierSelect.options[5].text = `Tier 6 (<1 Floor) (${c6} Units)`;
-            tierSelect.options[6].text = `Any / Entire Portfolio (${cAll} Units)`;
+            if (tierSelect) {
+                tierSelect.options[0].text = `Tier 1 (99 - 70 Power) (${c1} Units)`;
+                tierSelect.options[1].text = `Tier 2 (70 - 50 Power) (${c2} Units)`;
+                tierSelect.options[2].text = `Tier 3 (50 - 30 Power) (${c3} Units)`;
+                tierSelect.options[3].text = `Tier 4 (30 - 10 Power) (${c4} Units)`;
+                tierSelect.options[4].text = `Tier 5 (10 - 1 Power) (${c5} Units)`;
+                tierSelect.options[5].text = `Tier 6 (<1 Floor) (${c6} Units)`;
+                tierSelect.options[6].text = `Any / Entire Portfolio (${cAll} Units)`;
+            }
 
             const tagsBox = document.getElementById('token-tags-box');
             tagsBox.innerHTML = '';
@@ -1066,7 +1059,7 @@
             if (document.getElementById('chk-addr').value.trim()) {
                 await checkBalance(false);
             }
-            if (document.getElementById('tx-sender').value.trim()) {
+            if (document.getElementById('tx-sender')?.value.trim()) {
                 await refreshSenderBrackets();
             }
         } catch (e) { 
@@ -1206,7 +1199,7 @@
             if (document.getElementById('chk-addr').value.trim()) {
                 await checkBalance(false);
             }
-            if (document.getElementById('tx-sender').value.trim()) {
+            if (document.getElementById('tx-sender')?.value.trim()) {
                 await refreshSenderBrackets();
             }
         } catch (e) { 
