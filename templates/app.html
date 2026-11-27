@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Variable Coin Protocol Center</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            color: #ffffff;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #0d1117;
+            margin: 0;
+            padding: 20px;
+            top: 0px !important;
+            position: static !important;
+        }
+
+        .goog-te-banner-frame.skiptranslate, 
+        .goog-te-banner-frame,
+        iframe.goog-te-menu-frame {
+            display: none !important;
+        }
+
+        #google_translate_element {
+            display: inline-block;
+            margin: 0;
+            padding: 0;
+        }
+
+        .goog-te-gadget {
+            color: transparent !important;
+            font-size: 0px !important;
+            display: inline-block !important;
+        }
+
+        .goog-te-gadget .goog-te-combo {
+            background-color: #010409 !important;
+            color: #ffffff !important;
+            border: 1px solid #30363d !important;
+            padding: 8px 12px !important;
+            border-radius: 6px !important;
+            font-size: 13px !important;
+            outline: none !important;
+            cursor: pointer !important;
+            margin: 0 !important;
+            display: inline-block !important;
+        }
+
+        .goog-te-gadget span, 
+        .goog-logo-link {
+            display: none !important;
+        }
+
+        .container { 
+            max-width: 1200px; 
+            margin: auto; 
+        }
+
+        h1, h2, h3 { 
+            color: #58a6ff !important; 
+            margin-top: 0;
+        }
+        
+        .header {
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            border-bottom: 2px solid #30363d;
+            padding-bottom: 15px; 
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background-color: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .shield-center {
+            border: 2px solid #a371f7;
+            background-color: #1a162b;
+        }
+
+        .grid-2 { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); 
+            gap: 20px; 
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 12px;
+        }
+
+        .stat-row { 
+            display: flex; 
+            justify-content: space-between; 
+            padding: 10px; 
+            background-color: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            align-items: center;
+        }
+
+        .stat-label { 
+            color: #8b949e !important; 
+            font-size: 13px;
+        }
+
+        .stat-val { 
+            font-weight: bold; 
+            color: #58a6ff !important;
+            font-size: 13px;
+            text-align: right;
+            word-break: break-all;
+        }
+
+        .tier-inventory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .tier-box {
+            background-color: #010409;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            position: relative;
+        }
+
+        .tier-box.t1 { border-color: #238636; background-color: rgba(35, 134, 54, 0.1); }
+        .tier-box.t2 { border-color: #1f6feb; background-color: rgba(31, 111, 235, 0.1); }
+        .tier-box.t3 { border-color: #d29922; background-color: rgba(210, 153, 34, 0.1); }
+        .tier-box.t4 { border-color: #db6d28; background-color: rgba(219, 109, 40, 0.1); }
+        .tier-box.t5 { border-color: #8957e5; background-color: rgba(137, 87, 229, 0.1); }
+        .tier-box.t6 { border-color: #484f58; background-color: rgba(72, 79, 88, 0.1); }
+
+        .tier-box-title {
+            font-size: 11px;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .tier-box-count {
+            font-size: 17px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .tier-box-avg {
+            font-size: 10px;
+            color: #8b949e !important;
+        }
+
+        .tx-bracket-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 8px;
+            margin-bottom: 14px;
+        }
+
+        .tx-bracket-item {
+            background-color: #010409;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 8px;
+            text-align: center;
+            font-size: 11px;
+        }
+
+        .tx-bracket-item strong {
+            display: block;
+            font-size: 13px;
+            margin-top: 3px;
+            color: #58a6ff !important;
+        }
+
+        .token-tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            max-height: 120px;
+            overflow-y: auto;
+            margin-top: 10px;
+            padding: 8px;
+            background-color: #010409;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+        }
+
+        .token-tag {
+            background-color: #21262d;
+            border: 1px solid #388bfd;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .history-container {
+            max-height: 360px;
+            overflow-y: auto;
+            margin-top: 12px;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            background-color: #010409;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .history-table th,
+        .history-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #21262d;
+        }
+
+        .history-table th {
+            background-color: #0d1117;
+            color: #8b949e !important;
+            position: sticky;
+            top: 0;
+        }
+
+        .badge {
+            padding: 3px 7px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .badge-mined { background-color: rgba(35, 134, 54, 0.25); border: 1px solid #3fb950; color: #3fb950 !important; }
+        .badge-received { background-color: rgba(31, 111, 235, 0.25); border: 1px solid #58a6ff; color: #58a6ff !important; }
+        .badge-sent { background-color: rgba(210, 153, 34, 0.25); border: 1px solid #d29922; color: #d29922 !important; }
+        .badge-burned { background-color: rgba(218, 54, 51, 0.25); border: 1px solid #f85149; color: #f85149 !important; }
+
+        input, select, textarea {
+            width: 100%; 
+            padding: 12px; 
+            margin-top: 8px; 
+            margin-bottom: 14px;
+            border-radius: 6px; 
+            border: 1px solid #30363d;
+            background-color: #010409 !important; 
+            color: #ffffff !important; 
+            caret-color: #58a6ff !important;
+            font-size: 14px; 
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            border-radius: 6px;
+            cursor: pointer; 
+            font-weight: bold; 
+            border: none;
+            background-color: #238636; 
+            color: #ffffff !important;
+            text-transform: uppercase;
+        }
+
+        button.btn-blue { background-color: #1f6feb; }
+        button.btn-purple { background-color: #8957e5; }
+        button:hover { opacity: 0.9; }
+
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 8px; 
+            margin: 15px 0;
+        }
+
+        .action-box {
+            background-color: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 10px 6px;
+            cursor: pointer;
+            text-align: center;
+            font-weight: bold;
+            font-size: 11px;
+        }
+
+        .action-box:hover {
+            border-color: #a371f7;
+            background-color: rgba(163, 113, 247, 0.1);
+        }
+
+        .action-box.selected {
+            border-color: #58a6ff;
+            background-color: #1f6feb33;
+            box-shadow: 0 0 8px rgba(88, 166, 255, 0.3);
+        }
+
+        pre {
+            background-color: #000000;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #30363d;
+            color: #f0f6fc !important;
+            max-height: 160px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 12px;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background-color: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 10px;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 30px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #8b949e !important;
+            cursor: pointer;
+            width: auto;
+            padding: 0;
+        }
+
+        .modal-close:hover {
+            color: #ffffff !important;
+        }
+
+        .whitepaper-body {
+            line-height: 1.6;
+            font-size: 14px;
+            color: #c9d1d9;
+        }
+
+        .whitepaper-body h3 {
+            border-bottom: 1px solid #30363d;
+            padding-bottom: 8px;
+            margin-top: 25px;
+        }
+
+        .whitepaper-body ul {
+            padding-left: 20px;
+        }
+
+        .whitepaper-body li {
+            margin-bottom: 8px;
+        }
+
+        .whitepaper-body code {
+            background-color: #010409;
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid #30363d;
+            color: #58a6ff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <div>
+            <h1 style="font-size: 22px;">Variable Coin Protocol Center</h1>
+            <p style="color: #8b949e; margin: 0; font-size: 13px;">
+                Local Sovereign Desktop Node (127.0.0.1)
+            </p>
+        </div>
+        <div class="header-controls">
+            <button class="btn-blue" onclick="openWhitepaperModal()" style="width: auto; padding: 8px 16px; margin: 0; background-color: #8957e5;">WHITEPAPER</button>
+            <div id="google_translate_element"></div>
+            <button class="btn-blue" onclick="refreshNetwork()" style="width: auto; padding: 8px 16px; margin: 0;">REFRESH</button>
+        </div>
+    </div>
+
+    <!-- LIVE NETWORK STATUS -->
+    <div class="card">
+        <h3>Live Network Status</h3>
+        <div class="stats-grid">
+            <div class="stat-row"><span class="stat-label">Main Chain Height:</span><span id="stat-main-height" class="stat-val">-</span></div>
+            <div class="stat-row"><span class="stat-label">Alt Chain Height:</span><span id="stat-alt-height" class="stat-val">-</span></div>
+            <div class="stat-row"><span class="stat-label">Main Coin Supply:</span><span id="stat-main" class="stat-val">-</span></div>
+            <div class="stat-row"><span class="stat-label">Shield Coin Circulating:</span><span id="stat-alt" class="stat-val">-</span></div>
+            <div class="stat-row"><span class="stat-label">Current Mint Power:</span><span id="stat-impact" class="stat-val" style="color: #a371f7 !important;">-</span></div>
+            <div class="stat-row"><span class="stat-label">Active P2P Nodes:</span><span id="stat-nodes" class="stat-val" style="color: #3fb950 !important;">-</span></div>
+        </div>
+    </div>
+
+    <!-- COMMAND CENTER -->
+    <div class="card shield-center">
+        <h2 style="color: #a371f7 !important;">Variable Coin Command Center</h2>
+        <p style="color: #8b949e; font-size: 13px;">Modulate protocol parameters by selectively burning Shield tokens by tier. Supply actions apply globally; price stabilization actions can be applied personally or globally.</p>
+
+        <label class="stat-label">Wallet Address (Public Key):</label>
+        <div style="display: flex; gap: 8px; align-items: center;">
+            <input type="text" id="cmd-addr" placeholder="Enter wallet address..." style="margin-bottom: 0; flex: 1;">
+            <button class="btn-blue" onclick="pasteToInput('cmd-addr', this)" style="width: auto; padding: 12px 14px; margin: 0;">PASTE</button>
+        </div>
+
+        <label class="stat-label" style="color: #da3633 !important; margin-top: 14px; display: block;">256-Bit Master Private Key (Signature):</label>
+        <div style="display: flex; gap: 8px; align-items: center;">
+            <input type="password" id="cmd-priv" placeholder="Enter 64-character private key..." style="margin-bottom: 0; flex: 1;">
+            <button class="btn-blue" onclick="pasteToInput('cmd-priv', this)" style="width: auto; padding: 12px 14px; margin: 0; background-color: #da3633;">PASTE</button>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin-top: 14px;">
+            <div>
+                <label class="stat-label" style="color: #58a6ff !important; font-weight: bold;">Target Power Tier to Burn:</label>
+                <select id="cmd-tier" style="border-color: #58a6ff; font-weight: bold;">
+                    <option value="tier_99_70">Tier 1 (99 - 70 Power) (0 Units)</option>
+                    <option value="tier_70_50">Tier 2 (70 - 50 Power) (0 Units)</option>
+                    <option value="tier_50_30">Tier 3 (50 - 30 Power) (0 Units)</option>
+                    <option value="tier_30_10">Tier 4 (30 - 10 Power) (0 Units)</option>
+                    <option value="tier_10_1">Tier 5 (10 - 1 Power) (0 Units)</option>
+                    <option value="tier_below_1">Tier 6 (&lt;1 Floor) (0 Units)</option>
+                    <option value="any" selected>Any / Entire Portfolio (0 Units)</option>
+                </select>
+            </div>
+            <div id="cmd-scope-wrapper">
+                <label class="stat-label" id="cmd-scope-label">Execution Scope (For Price Actions):</label>
+                <select id="cmd-scope">
+                    <option value="personal">[PERSONAL] Apply price protection only to my wallet</option>
+                    <option value="global">[GLOBAL] Apply price action across entire network</option>
+                </select>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div>
+                <label class="stat-label">Exact Quantity to Burn (e.g. 1):</label>
+                <input type="number" id="cmd-burn-count" placeholder="Number of tokens to burn..." min="1">
+            </div>
+            <div>
+                <label class="stat-label">Or Burn by Tier Percentage: <span id="pct-val" style="color: #58a6ff;">100</span>%</label>
+                <input type="range" id="cmd-percentage" min="1" max="100" value="100" oninput="document.getElementById('pct-val').innerText = this.value; document.getElementById('cmd-burn-count').value = '';" style="margin-top: 14px; cursor: pointer;">
+            </div>
+        </div>
+
+        <div class="action-grid">
+            <div class="action-box" onclick="selectAction('peg_static', this)">PEG PRICE<br><small>Personal / Global Peg</small></div>
+            <div class="action-box" onclick="selectAction('boost_price', this)">BOOST PRICE<br><small>Personal / Global Boost</small></div>
+            <div class="action-box" onclick="selectAction('discount_price', this)">DISCOUNT PRICE<br><small>Personal / Global Discount</small></div>
+            <div class="action-box" onclick="selectAction('burn_main', this)">BURN SUPPLY<br><small>Global Supply Burn</small></div>
+            <div class="action-box" onclick="selectAction('expand_supply', this)">EXPAND CAPACITY<br><small>Global Cap Expansion</small></div>
+        </div>
+
+        <button class="btn-purple" onclick="executeCommand()">EXECUTE PROTOCOL ACTION</button>
+        <pre id="cmd-log" style="display: none;"></pre>
+    </div>
+
+    <!-- WALLET & MINING -->
+    <div class="grid-2">
+        <div class="card">
+            <h2>Wallet &amp; Inventory Hub</h2>
+
+            <div>
+                <button onclick="createWallet()">GENERATE 256-BIT MASTER WALLET</button>
+                
+                <div id="wallet-keys" style="display: none; margin-top: 15px;">
+                    <div style="background-color: rgba(218, 54, 51, 0.1); color: #da3633; padding: 10px; border: 1px solid #da3633; border-radius: 5px; margin-bottom: 15px; font-weight: bold; text-align: center; font-size: 12px;">
+                        CRITICAL: Store your 64-character 256-bit Private Key offline securely. Copy and paste your keys into the desired sections manually.
+                    </div>
+                    
+                    <label class="stat-label">Wallet Address (Public Key):</label>
+                    <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                        <pre id="disp-pub" style="flex: 1; margin: 0;"></pre>
+                        <button class="btn-blue" onclick="copyTextContent('disp-pub', this)" style="width: auto; padding: 8px 14px; margin: 0;">COPY</button>
+                    </div>
+                    
+                    <label class="stat-label" style="color: #da3633 !important;">256-Bit Private Key (64-Char Hex):</label>
+                    <div style="display: flex; gap: 8px;">
+                        <pre id="disp-priv-key" style="color: #da3633 !important; flex: 1; margin: 0;"></pre>
+                        <button class="btn-blue" onclick="copyTextContent('disp-priv-key', this)" style="width: auto; padding: 8px 14px; margin: 0; background-color: #da3633;">COPY</button>
+                    </div>
+                </div>
+
+                <hr style="border-color: #30363d; margin: 20px 0;">
+                
+                <h3>Restore Existing Wallet</h3>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <input type="text" id="rec-priv" placeholder="Paste 64-character private key here..." style="margin-bottom: 0; flex: 1;">
+                    <button class="btn-blue" onclick="pasteToInput('rec-priv', this)" style="width: auto; padding: 12px 14px; margin: 0;">PASTE</button>
+                </div>
+                <button class="btn-purple" onclick="recoverWallet()" style="margin-top: 14px;">RESTORE &amp; VALIDATE WALLET</button>
+
+                <hr style="border-color: #30363d; margin: 20px 0;">
+            </div>
+            
+            <h3>Query Ledger &amp; Inventory</h3>
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <input type="text" id="chk-addr" placeholder="Enter wallet address..." style="margin-bottom: 0; flex: 1;">
+                <button class="btn-blue" onclick="pasteToInput('chk-addr', this)" style="width: auto; padding: 12px 14px; margin: 0;">PASTE</button>
+            </div>
+            <button class="btn-blue" onclick="checkBalance(true)" style="margin-top: 14px;">QUERY INVENTORY</button>
+
+            <div id="balance-res" style="display: none; margin-top: 14px;">
+                <div class="stat-row"><span class="stat-label">MAIN COIN:</span><span id="bal-main" class="stat-val">0</span></div>
+                <div class="stat-row" style="margin-top: 6px;"><span class="stat-label">TOTAL SHIELD COIN:</span><span id="bal-alt-count" class="stat-val" style="color: #a371f7 !important;">0 Units</span></div>
+                <div class="stat-row" style="margin-top: 6px;"><span class="stat-label">OVERALL AVERAGE POWER:</span><span id="bal-alt-avg" class="stat-val" style="color: #58a6ff !important;">0 / 99.0</span></div>
+                
+                <h4 style="margin: 16px 0 6px 0; font-size: 12px; color: #8b949e;">INVENTORY DISTRIBUTION BY POWER BRACKET:</h4>
+                <div class="tier-inventory-grid">
+                    <div class="tier-box t1">
+                        <div class="tier-box-title" style="color: #3fb950;">99 - 70 POWER</div>
+                        <div class="tier-box-count" id="t1-count">0 Units</div>
+                        <div class="tier-box-avg" id="t1-avg">Avg: 0.0</div>
+                    </div>
+                    <div class="tier-box t2">
+                        <div class="tier-box-title" style="color: #58a6ff;">70 - 50 POWER</div>
+                        <div class="tier-box-count" id="t2-count">0 Units</div>
+                        <div class="tier-box-avg" id="t2-avg">Avg: 0.0</div>
+                    </div>
+                    <div class="tier-box t3">
+                        <div class="tier-box-title" style="color: #d29922;">50 - 30 POWER</div>
+                        <div class="tier-box-count" id="t3-count">0 Units</div>
+                        <div class="tier-box-avg" id="t3-avg">Avg: 0.0</div>
+                    </div>
+                    <div class="tier-box t4">
+                        <div class="tier-box-title" style="color: #db6d28;">30 - 10 POWER</div>
+                        <div class="tier-box-count" id="t4-count">0 Units</div>
+                        <div class="tier-box-avg" id="t4-avg">Avg: 0.0</div>
+                    </div>
+                    <div class="tier-box t5">
+                        <div class="tier-box-title" style="color: #a371f7;">10 - 1 POWER</div>
+                        <div class="tier-box-count" id="t5-count">0 Units</div>
+                        <div class="tier-box-avg" id="t5-avg">Avg: 0.0</div>
+                    </div>
+                    <div class="tier-box t6">
+                        <div class="tier-box-title" style="color: #8b949e;">&lt;1 POWER</div>
+                        <div class="tier-box-count" id="t6-count">0 Units</div>
+                        <div class="tier-box-avg" id="t6-avg">Avg: 0.0</div>
+                    </div>
+                </div>
+
+                <h4 style="margin: 16px 0 4px 0; font-size: 12px; color: #8b949e;">INDIVIDUAL TOKEN INCEPTION POWERS:</h4>
+                <div class="token-tags-container" id="token-tags-box">
+                    <span style="color: #6e7681; font-size: 11px;">No tokens found.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- MINING HUB -->
+        <div class="card">
+            <h2>Mining Hub</h2>
+            <p style="color: #8b949e; font-size: 13px;">Proof-of-work resolved across the infinite variable space. Each minted Shield Coin permanently seals its inception impact power.</p>
+            
+            <label class="stat-label">Miner Address:</label>
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <input type="text" id="mine-addr" placeholder="Enter miner address..." style="margin-bottom: 0; flex: 1;">
+                <button class="btn-blue" onclick="pasteToInput('mine-addr', this)" style="width: auto; padding: 12px 14px; margin: 0;">PASTE</button>
+            </div>
+
+            <label class="stat-label" style="margin-top: 14px; display: block;">Target Asset:</label>
+            <select id="mine-type">
+                <option value="ALT">SHIELD COIN (Power-Sealed Utility Token)</option>
+                <option value="MAIN">MAIN COIN (Fixed 50 Reward - 21M Cap)</option>
+            </select>
+
+            <button id="btn-mine" class="btn-blue" onclick="startMining()">DISPATCH MINER</button>
+            <pre id="mine-log" style="display: none;"></pre>
+        </div>
+    </div>
+
+    <!-- TRANSFER & TRANSACTION HISTORY -->
+    <div class="grid-2">
+        <!-- TRANSFER HUB -->
+        <div class="card">
+            <h2>Transfer &amp; Send Hub</h2>
+            <p style="color: #8b949e; font-size: 13px;">Send Main Coin or Shield Coin units directly to another peer wallet with SECP256k1 signature verification.</p>
+
+            <label class="stat-label">Sender Wallet Address (Public Key):</label>
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <input type="text" id="tx-sender" placeholder="Enter sender wallet address..." oninput="refreshSenderBrackets()" style="margin-bottom: 0; flex: 1;">
+                <button class="btn-blue" onclick="pasteToInput('tx-sender', this, true)" style="width: auto; padding: 12px 14px; margin: 0;">PASTE</button>
+            </div>
+
+            <label class="stat-label" style="color: #da3633 !important; margin-top: 14px; display: block;">256-Bit Private Key (Signature):</label>
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <input type="password" id="tx-priv" placeholder="Enter 64-character private key..." style="margin-bottom: 0; flex: 1;">
+                <button class="btn-blue" onclick="pasteToInput('tx-priv', this)" style="width: auto; padding: 12px 14px; margin: 0; background-color: #da3633;">PASTE</button>
+            </div>
+
+            <label class="stat-label" style="margin-top: 14px; display: block;">Recipient Wallet Address:</label>
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <input type="text" id="tx-recipient" placeholder="Enter recipient wallet address..." style="margin-bottom: 0; flex: 1;">
+                <button class="btn-blue" onclick="pasteToInput('tx-recipient', this)" style="width: auto; padding: 12px 14px; margin: 0;">PASTE</button>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px;">
+                <div>
+                    <label class="stat-label">Asset to Transfer:</label>
+                    <select id="tx-asset" onchange="toggleTransferTierSelect()">
+                        <option value="MAIN">MAIN COIN</option>
+                        <option value="SHIELD_COIN">SHIELD COIN</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="stat-label">Quantity (Amount):</label>
+                    <input type="number" id="tx-amount" placeholder="Enter quantity..." min="1">
+                </div>
+            </div>
+
+            <!-- Shield Coin Power Bracket Counts & Exact Impact Power Input -->
+            <div id="tx-tier-container" style="display: none; margin-top: 6px; padding: 12px; background-color: #0d1117; border: 1px solid #30363d; border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                    <span class="stat-label" style="color: #a371f7 !important; font-weight: bold;">Available Shield Coins by Power Bracket:</span>
+                    <button type="button" class="btn-blue" onclick="refreshSenderBrackets()" style="width: auto; padding: 4px 10px; margin: 0; font-size: 10px;">CHECK COUNTS</button>
+                </div>
+
+                <div class="tx-bracket-grid">
+                    <div class="tx-bracket-item">99 - 70<strong id="tx-b1">0 Units</strong></div>
+                    <div class="tx-bracket-item">70 - 50<strong id="tx-b2">0 Units</strong></div>
+                    <div class="tx-bracket-item">50 - 30<strong id="tx-b3">0 Units</strong></div>
+                    <div class="tx-bracket-item">30 - 10<strong id="tx-b4">0 Units</strong></div>
+                    <div class="tx-bracket-item">10 - 1<strong id="tx-b5">0 Units</strong></div>
+                    <div class="tx-bracket-item">&lt; 1<strong id="tx-b6">0 Units</strong></div>
+                </div>
+
+                <label class="stat-label" style="color: #58a6ff !important; font-weight: bold;">Target Impact Power to Transfer (0.0001 - 99.0):</label>
+                <input type="number" id="tx-power" step="0.0001" min="0.0001" max="99" placeholder="Enter desired impact power (e.g. 85.5000)..." style="margin-bottom: 4px; border-color: #58a6ff;">
+                <small style="color: #8b949e; display: block; font-size: 11px;">If the exact impact power is not in your wallet, the protocol will identify and suggest the closest available token power.</small>
+            </div>
+
+            <button onclick="sendTransaction(false)">SEND TRANSACTION</button>
+            <pre id="tx-log" style="display: none;"></pre>
+        </div>
+
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+                <h2 style="margin: 0;">Wallet Transaction History</h2>
+                <button class="btn-blue" onclick="checkBalance(false)" style="width: auto; padding: 6px 12px; margin: 0; font-size: 11px;">REFRESH LOG</button>
+            </div>
+            <p style="color: #8b949e; font-size: 13px; margin-top: 8px;">Chronological ledger record of mined rewards, incoming/outgoing transfers, and burned Shield tokens.</p>
+
+            <div class="history-container">
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Asset</th>
+                            <th>Amount</th>
+                            <th>Counterparty / Target</th>
+                            <th>Block</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-tbody">
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: #6e7681; padding: 20px;">Query a wallet address to view transaction history.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- WHITEPAPER & MINI USER GUIDE MODAL -->
+<div id="whitepaper-modal" class="modal-overlay" onclick="closeWhitepaperModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <button class="modal-close" onclick="closeWhitepaperModal()">&times;</button>
+        <h2 style="color: #58a6ff; margin-bottom: 5px;">Variable Coin Protocol (VCP)</h2>
+        <p style="color: #8b949e; font-size: 13px; margin-top: 0;">Installation Permissions, Infinite Variable Logic &amp; Mini User Guide</p>
+        
+        <div class="whitepaper-body">
+            <h3>1. Desktop Node Download &amp; Security Permissions</h3>
+            <p>Variable Coin Protocol runs as a sovereign peer-to-peer (P2P) node. When launching the standalone desktop package for the first time, please grant the following system permissions so the node can synchronize properly:</p>
+            <ul>
+                <li><strong>Windows SmartScreen &amp; Antivirus Notice:</strong> Because this is an independent open-source cryptographic binary without a commercial corporate certificate, Windows may display a <em>"Windows protected your PC"</em> prompt. Click <strong>"More info"</strong> and then <strong>"Run anyway"</strong>.</li>
+                <li><strong>Firewall Network Access:</strong> When prompted by Windows Firewall, select <strong>both</strong> <em>Private networks</em> and <em>Public networks</em>, then click <strong>"Allow access"</strong>. This enables direct P2P block synchronization and mining broadcasts.</li>
+            </ul>
+
+            <h3>2. The Infinite Variable Architecture &amp; 1-99 Rule</h3>
+            <ul>
+                <li><strong>Infinite Variable Logic:</strong> Instead of static difficulty or heavy memory footprints, the protocol operates across an <strong>Infinite Variable</strong> space that rotates every 24 hours.</li>
+                <li><strong>1 to 99 Active Scaling:</strong> Each node is assigned a dynamic 1-to-99 operational ratio every 24 hours based on storage safety and thermal conditions. All blocks remain permanently archived on disk while active memory scales between 1% and 99%.</li>
+            </ul>
+
+            <h3>3. Application Settings &amp; Mini User Guide</h3>
+            <ul>
+                <li><strong>Wallet &amp; Inventory Hub:</strong> Generate a new 256-bit SECP256k1 key pair or restore an existing wallet using your 64-character private key. Generated keys are displayed solely in the wallet box without auto-filling other sections.</li>
+                <li><strong>Mining Hub:</strong> Select either <code>SHIELD COIN</code> or <code>MAIN COIN</code> and dispatch the miner. The mining output displays the Asset Type, Block Number, Mined Reward/Impact Power, and your 1-99 Mining Power Position.</li>
+                <li><strong>Transfer &amp; Send Hub:</strong> Transfer Main Coins or Shield Coins to any peer address. When sending Shield Coins, you can view how many units you hold in each bracket (<code>99-70</code>, <code>70-50</code>, <code>50-30</code>, <code>30-10</code>, <code>10-1</code>, <code>&lt;1</code>) and specify the exact Impact Power and quantity to transfer. If the exact power is not available, the system reports the closest available token power in your wallet.</li>
+                <li><strong>Variable Coin Command Center:</strong> Burn Shield Coins from a chosen power tier to trigger protocol actions:
+                    <ul>
+                        <li><code>PEG PRICE / BOOST PRICE / DISCOUNT PRICE:</code> Stabilizes or adjusts valuation according to supply and demand. You can select <strong>Personal</strong> (applies to your wallet) or <strong>Global</strong> (applies network-wide).</li>
+                        <li><code>BURN SUPPLY / EXPAND CAPACITY:</code> Permanently burns Main Coin supply or expands maximum network capacity. These supply actions always operate <strong>Globally</strong> across the entire protocol.</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'en',
+            autoDisplay: false
+        }, 'google_translate_element');
+    }
+</script>
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+<script>
+    const API = window.location.origin;
+    const SERVER_MODE = "desktop";
+    let activeAction = null;
+
+    window.onload = refreshNetwork;
+
+    function openWhitepaperModal() {
+        document.getElementById('whitepaper-modal').style.display = 'block';
+    }
+
+    function closeWhitepaperModal(event) {
+        if (!event || event.target.id === 'whitepaper-modal' || event.target.className === 'modal-close') {
+            document.getElementById('whitepaper-modal').style.display = 'none';
+        }
+    }
+
+    function toggleTransferTierSelect() {
+        const asset = document.getElementById('tx-asset').value;
+        const container = document.getElementById('tx-tier-container');
+        if (asset === 'SHIELD_COIN') {
+            container.style.display = 'block';
+            refreshSenderBrackets();
+        } else {
+            container.style.display = 'none';
+        }
+    }
+
+    async function refreshSenderBrackets() {
+        const senderEl = document.getElementById('tx-sender');
+        if (!senderEl) return;
+        const sender = senderEl.value.trim();
+        if (!sender) return;
+        try {
+            const res = await fetch(`${API}/chain?address=${encodeURIComponent(sender)}`);
+            const data = await res.json();
+            const tiers = data["2_USER_DATA"]?.["tiers"] || {};
+
+            document.getElementById('tx-b1').innerText = (tiers['tier_99_70']?.count || 0) + " Units";
+            document.getElementById('tx-b2').innerText = (tiers['tier_70_50']?.count || 0) + " Units";
+            document.getElementById('tx-b3').innerText = (tiers['tier_50_30']?.count || 0) + " Units";
+            document.getElementById('tx-b4').innerText = (tiers['tier_30_10']?.count || 0) + " Units";
+            document.getElementById('tx-b5').innerText = (tiers['tier_10_1']?.count || 0) + " Units";
+            document.getElementById('tx-b6').innerText = (tiers['tier_below_1']?.count || 0) + " Units";
+        } catch (e) {
+            console.error("Failed to fetch sender bracket counts:", e);
+        }
+    }
+
+    function selectAction(action, element) {
+        activeAction = action;
+        document.querySelectorAll('.action-box').forEach(el => el.classList.remove('selected'));
+        element.classList.add('selected');
+
+        const scopeSelect = document.getElementById('cmd-scope');
+        const scopeLabel = document.getElementById('cmd-scope-label');
+
+        if (action === 'burn_main' || action === 'expand_supply') {
+            scopeSelect.value = 'global';
+            scopeSelect.disabled = true;
+            scopeLabel.innerText = 'Execution Scope (Supply Actions are Strictly Global):';
+        } else {
+            scopeSelect.disabled = false;
+            scopeLabel.innerText = 'Execution Scope (Personal or Global for Price Actions):';
+        }
+    }
+
+    function formatShortAddress(addr) {
+        if (!addr) return "-";
+        const clean = String(addr).trim();
+        if (clean === "PROTOCOL_REWARD") return "Protocol Reward";
+        if (clean.length <= 16) return clean;
+        return clean.slice(0, 8) + "..." + clean.slice(-8);
+    }
+
+    function renderTransactionHistory(historyList) {
+        const tbody = document.getElementById('history-tbody');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+
+        if (!historyList || historyList.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #6e7681; padding: 20px;">No transactions recorded for this wallet yet.</td></tr>';
+            return;
+        }
+
+        const fragment = document.createDocumentFragment();
+        historyList.forEach(item => {
+            const tr = document.createElement('tr');
+            let badgeClass = 'badge-received';
+            if (item.type === 'MINED') badgeClass = 'badge-mined';
+            else if (item.type === 'SENT') badgeClass = 'badge-sent';
+            else if (item.type === 'BURNED') badgeClass = 'badge-burned';
+
+            const assetLabel = item.coin_type === 'SHIELD_COIN' ? 'SHIELD' : 'MAIN';
+            const statusSuffix = item.status === 'PENDING' ? ' (Pending)' : '';
+
+            const tdType = document.createElement('td');
+            const badge = document.createElement('span');
+            badge.className = `badge ${badgeClass}`;
+            badge.innerText = item.type;
+            tdType.appendChild(badge);
+
+            const tdAsset = document.createElement('td');
+            tdAsset.style.fontWeight = 'bold';
+            tdAsset.innerText = assetLabel;
+
+            const tdAmount = document.createElement('td');
+            tdAmount.innerText = item.amount;
+
+            const tdCounterparty = document.createElement('td');
+            tdCounterparty.title = item.counterparty || '';
+            tdCounterparty.style.fontFamily = 'monospace';
+            tdCounterparty.style.setProperty('color', '#8b949e', 'important');
+            tdCounterparty.innerText = formatShortAddress(item.counterparty);
+
+            const tdBlock = document.createElement('td');
+            tdBlock.innerText = `#${item.block_index}${statusSuffix}`;
+
+            tr.appendChild(tdType);
+            tr.appendChild(tdAsset);
+            tr.appendChild(tdAmount);
+            tr.appendChild(tdCounterparty);
+            tr.appendChild(tdBlock);
+            fragment.appendChild(tr);
+        });
+        tbody.appendChild(fragment);
+    }
+
+    async function refreshNetwork() {
+        try {
+            const res = await fetch(`${API}/chain`);
+            const data = await res.json();
+            
+            document.getElementById('stat-main-height').innerText = data["1_GLOBAL_DATA"]?.["main_chain_height"] || "1";
+            document.getElementById('stat-alt-height').innerText = data["1_GLOBAL_DATA"]?.["alt_chain_height"] || "1";
+            document.getElementById('stat-main').innerText = data["1_GLOBAL_DATA"]?.["main_coin_supply"] || "-";
+            document.getElementById('stat-alt').innerText = data["1_GLOBAL_DATA"]?.["shield_coin_circulating"] || "-";
+            document.getElementById('stat-impact').innerText = (data["1_GLOBAL_DATA"]?.["current_network_mint_power"] || "99.0") + " Power";
+            document.getElementById('stat-nodes').innerText = (data["1_GLOBAL_DATA"]?.["active_nodes_count"] || "1") + " Online";
+        } catch (e) { 
+            console.error("Network communication error:", e); 
+        }
+    }
+
+    async function createWallet() {
+        try {
+            const res = await fetch(`${API}/wallet/new`);
+            const data = await res.json();
+            if (!res.ok) return alert(data.error || "Wallet generation failed.");
+            document.getElementById('disp-pub').innerText = data.public_key;
+            document.getElementById('disp-priv-key').innerText = data.private_key; 
+            document.getElementById('wallet-keys').style.display = 'block';
+        } catch(e) {
+            alert("Wallet generation failed.");
+        }
+    }
+
+    async function recoverWallet() {
+        const privKey = document.getElementById('rec-priv').value.trim();
+        if (!privKey) return alert("Please enter your 64-character 256-bit Private Key.");
+
+        try {
+            const res = await fetch(`${API}/wallet/recover`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ private_key: privKey })
+            });
+            const data = await res.json();
+            if (data.public_key) {
+                document.getElementById('disp-pub').innerText = data.public_key;
+                document.getElementById('disp-priv-key').innerText = data.private_key;
+                document.getElementById('wallet-keys').style.display = 'block';
+                alert("Cryptographic verification successful: Wallet restored.");
+            } else {
+                alert(data.error || "Verification failed: Invalid key.");
+            }
+        } catch (e) { 
+            alert("Network communication error."); 
+        }
+    }
+
+    async function checkBalance(isManual = false, overrideAddr = null) {
+        const addr = (overrideAddr || document.getElementById('chk-addr').value).trim();
+
+        if (!addr) {
+            if (isManual) alert("Please enter a valid wallet address.");
+            document.getElementById('balance-res').style.display = 'none';
+            return;
+        }
+
+        try {
+            const res = await fetch(`${API}/chain?address=${encodeURIComponent(addr)}`);
+            const data = await res.json();
+            const u = data["2_USER_DATA"] || {};
+            
+            document.getElementById('bal-main').innerText = (u["main_coin_balance"] || 0) + " Main Coin";
+            document.getElementById('bal-alt-count').innerText = (u["shield_coin_balance"] || 0) + " Units";
+            document.getElementById('bal-alt-avg').innerText = (u["shield_overall_average_power"] || 0) + " / 99.0";
+            
+            const tiers = u["tiers"] || {};
+            const setTierUI = (id, key) => {
+                const item = tiers[key] || { count: 0, average_power: 0 };
+                document.getElementById(`${id}-count`).innerText = item.count + " Units";
+                document.getElementById(`${id}-avg`).innerText = "Avg: " + item.average_power;
+            };
+
+            setTierUI('t1', 'tier_99_70');
+            setTierUI('t2', 'tier_70_50');
+            setTierUI('t3', 'tier_50_30');
+            setTierUI('t4', 'tier_30_10');
+            setTierUI('t5', 'tier_10_1');
+            setTierUI('t6', 'tier_below_1');
+
+            const c1 = tiers['tier_99_70']?.count || 0;
+            const c2 = tiers['tier_70_50']?.count || 0;
+            const c3 = tiers['tier_50_30']?.count || 0;
+            const c4 = tiers['tier_30_10']?.count || 0;
+            const c5 = tiers['tier_10_1']?.count || 0;
+            const c6 = tiers['tier_below_1']?.count || 0;
+            const cAll = u["shield_coin_balance"] || 0;
+
+            const tierSelect = document.getElementById('cmd-tier');
+            if (tierSelect) {
+                tierSelect.options[0].text = `Tier 1 (99 - 70 Power) (${c1} Units)`;
+                tierSelect.options[1].text = `Tier 2 (70 - 50 Power) (${c2} Units)`;
+                tierSelect.options[2].text = `Tier 3 (50 - 30 Power) (${c3} Units)`;
+                tierSelect.options[3].text = `Tier 4 (30 - 10 Power) (${c4} Units)`;
+                tierSelect.options[4].text = `Tier 5 (10 - 1 Power) (${c5} Units)`;
+                tierSelect.options[5].text = `Tier 6 (<1 Floor) (${c6} Units)`;
+                tierSelect.options[6].text = `Any / Entire Portfolio (${cAll} Units)`;
+            }
+
+            const tagsBox = document.getElementById('token-tags-box');
+            tagsBox.innerHTML = '';
+            const allTokens = u["all_tokens_sorted"] || [];
+            
+            if (allTokens.length === 0) {
+                tagsBox.innerHTML = '<span style="color: #6e7681; font-size: 11px;">No tokens found.</span>';
+            } else {
+                const displayBatch = allTokens.slice(0, 60);
+                const fragment = document.createDocumentFragment();
+                
+                displayBatch.forEach(p => {
+                    const tag = document.createElement('span');
+                    tag.className = 'token-tag';
+                    if (p >= 70.0) tag.style.borderColor = "#3fb950";
+                    else if (p >= 50.0) tag.style.borderColor = "#58a6ff";
+                    else if (p >= 30.0) tag.style.borderColor = "#d29922";
+                    else if (p >= 10.0) tag.style.borderColor = "#db6d28";
+                    else if (p >= 1.0) tag.style.borderColor = "#a371f7";
+                    else tag.style.borderColor = "#484f58";
+                    tag.innerText = Number(p).toFixed(4) + " Power";
+                    fragment.appendChild(tag);
+                });
+                
+                tagsBox.appendChild(fragment);
+
+                if (allTokens.length > 60) {
+                    const moreNotice = document.createElement('span');
+                    moreNotice.style.color = "#8b949e";
+                    moreNotice.style.fontSize = "11px";
+                    moreNotice.style.padding = "4px 8px";
+                    moreNotice.innerText = `+${allTokens.length - 60} more tokens in wallet`;
+                    tagsBox.appendChild(moreNotice);
+                }
+            }
+
+            renderTransactionHistory(u["history"] || []);
+            document.getElementById('balance-res').style.display = 'block';
+        } catch(e) {
+            if (isManual) alert("Failed to query ledger balance.");
+        }
+    }
+
+    async function startMining() {
+        const addr = document.getElementById('mine-addr').value.trim();
+        const coin = document.getElementById('mine-type').value;
+        const btn = document.getElementById('btn-mine');
+        const log = document.getElementById('mine-log');
+
+        if (!addr) return alert("Please enter a valid miner address.");
+
+        btn.disabled = true; 
+        btn.innerText = "MINING IN PROGRESS...";
+        log.style.display = "block"; 
+        log.innerText = "Resolving proof-of-work across infinite variable space...";
+
+        try {
+            const res = await fetch(`${API}/mine?address=${encodeURIComponent(addr)}&coin=${coin}`);
+            const data = await res.json();
+
+            if (!res.ok || data.status !== "success") {
+                log.innerText = data.error || data.message || "Mining target not reached. Please retry.";
+            } else if (data.coin_type === "SHIELD_COIN") {
+                log.innerText =
+                    `Asset Type: SHIELD COIN\n` +
+                    `Block Number: #${data.block_mined}\n` +
+                    `Mined Impact Power: ${data.mined_power}\n` +
+                    `1-99 Mining Power Position: ${data.mining_power_1_99} / 99.0`;
+            } else {
+                log.innerText =
+                    `Asset Type: MAIN COIN\n` +
+                    `Block Number: #${data.block_mined}\n` +
+                    `Mined Reward: ${data.reward_amount} MAIN\n` +
+                    `1-99 Mining Power Position: ${data.mining_power_1_99} / 99.0`;
+            }
+
+            await refreshNetwork();
+            if (document.getElementById('chk-addr').value.trim()) {
+                await checkBalance(false);
+            }
+            if (document.getElementById('tx-sender')?.value.trim()) {
+                await refreshSenderBrackets();
+            }
+        } catch (e) { 
+            log.innerText = "Mining cycle error occurred."; 
+        } finally { 
+            btn.disabled = false; 
+            btn.innerText = "DISPATCH MINER"; 
+        }
+    }
+
+    async function sendTransaction(acceptClosest = false) {
+        const sender = document.getElementById('tx-sender').value.trim();
+        const privKey = document.getElementById('tx-priv').value.trim();
+        const recipient = document.getElementById('tx-recipient').value.trim();
+        const coinType = document.getElementById('tx-asset').value;
+        const amount = document.getElementById('tx-amount').value.trim();
+        const requestedPower = document.getElementById('tx-power').value.trim();
+        const log = document.getElementById('tx-log');
+
+        if (!sender || !privKey || !recipient || !amount) {
+            return alert("Please fill in sender address, private key, recipient address, and amount.");
+        }
+
+        if (coinType === "SHIELD_COIN" && !requestedPower) {
+            return alert("Please enter the target Impact Power you want to transfer.");
+        }
+
+        log.style.display = "block";
+        log.innerText = "Verifying cryptographic signature and checking token inventory...";
+
+        try {
+            const res = await fetch(`${API}/transfer`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    sender: sender,
+                    private_key: privKey,
+                    recipient: recipient,
+                    coin_type: coinType,
+                    amount: parseInt(amount),
+                    requested_power: coinType === "SHIELD_COIN" ? parseFloat(requestedPower) : null,
+                    accept_closest: acceptClosest
+                })
+            });
+            const data = await res.json();
+
+            if (!res.ok) {
+                log.innerText = `Transfer Failed: ${data.error || "Unknown error"}`;
+            } else if (data.status === "closest_suggestion") {
+                const closestList = data.closest_powers.join(", ");
+                log.innerText =
+                    `Notice: Exact Impact Power (${data.requested_power}) not found in wallet.\n` +
+                    `Closest Available Token Power(s): ${closestList}\n` +
+                    `Closest Average Power: ${data.closest_average_power}`;
+
+                const confirmTransfer = confirm(
+                    `Exact Impact Power (${data.requested_power}) was not found in your wallet.\n\n` +
+                    `Closest available token power(s) for ${data.amount} unit(s):\n${closestList}\n\n` +
+                    `Would you like to transfer the closest available token(s) instead?`
+                );
+                if (confirmTransfer) {
+                    await sendTransaction(true);
+                }
+            } else {
+                if (data.coin_type === "SHIELD_COIN") {
+                    log.innerText =
+                        `Status: Transfer Scheduled\n` +
+                        `Asset: SHIELD COIN (${data.amount} Units)\n` +
+                        `Transferred Token Power(s): ${data.transferred_powers.join(", ")}\n` +
+                        `Target Block: #${data.scheduled_block}`;
+                } else {
+                    log.innerText =
+                        `Status: Transfer Scheduled\n` +
+                        `Asset: MAIN COIN (${data.amount} Units)\n` +
+                        `Target Block: #${data.scheduled_block}`;
+                }
+                document.getElementById('tx-amount').value = '';
+                await refreshNetwork();
+                await refreshSenderBrackets();
+                if (document.getElementById('chk-addr').value.trim()) {
+                    await checkBalance(false);
+                }
+            }
+        } catch (e) {
+            log.innerText = "Transfer request failed.";
+        }
+    }
+
+    async function executeCommand() {
+        const addr = document.getElementById('cmd-addr').value.trim();
+        const privKey = document.getElementById('cmd-priv').value.trim();
+        const targetTier = document.getElementById('cmd-tier').value;
+        const burnCount = document.getElementById('cmd-burn-count').value.trim();
+        const percentage = parseFloat(document.getElementById('cmd-percentage').value);
+        const log = document.getElementById('cmd-log');
+        const scope = document.getElementById('cmd-scope').value;
+
+        if (!addr || !privKey || !activeAction) {
+            return alert("Please select an action type and enter valid wallet keys.");
+        }
+
+        log.style.display = "block";
+        log.innerText = `Extracting tokens from selected tier (${targetTier}) and broadcasting protocol action...`;
+
+        const payload = {
+            address: addr,
+            private_key: privKey,
+            action: activeAction,
+            scope: scope,
+            target_tier: targetTier
+        };
+
+        if (burnCount !== "") {
+            payload.burn_count = parseInt(burnCount);
+        } else {
+            payload.alt_percentage = percentage;
+        }
+
+        try {
+            const res = await fetch(`${API}/protocol/act`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+            const resData = await res.json();
+            if (!res.ok) {
+                log.innerText = `Execution Failed: ${resData.error || "Unknown error"}`;
+            } else {
+                log.innerText =
+                    `Status: Protocol Action Executed\n` +
+                    `Action: ${resData.action_executed}\n` +
+                    `Applied Scope: ${resData.scope}\n` +
+                    `Tokens Burned: ${resData.tokens_burned_count} Units (Tier: ${resData.target_tier})\n` +
+                    `Average Burned Power: ${resData.burned_average_power}`;
+            }
+            await refreshNetwork();
+            if (document.getElementById('chk-addr').value.trim()) {
+                await checkBalance(false);
+            }
+            if (document.getElementById('tx-sender')?.value.trim()) {
+                await refreshSenderBrackets();
+            }
+        } catch (e) { 
+            log.innerText = "Execution failed."; 
+        }
+    }
+
+    function copyTextContent(elementId, btn) {
+        const el = document.getElementById(elementId);
+        if (!el) return;
+        navigator.clipboard.writeText(el.innerText).then(() => {
+            const old = btn.innerText;
+            btn.innerText = "COPIED";
+            setTimeout(() => { btn.innerText = old; }, 1200);
+        });
+    }
+
+    async function pasteToInput(elementId, btn, triggerBracketRefresh = false) {
+        const input = document.getElementById(elementId);
+        if (!input) return;
+        try {
+            const text = await navigator.clipboard.readText();
+            input.value = text.trim();
+            if (triggerBracketRefresh) refreshSenderBrackets();
+            const old = btn.innerText;
+            btn.innerText = "PASTED";
+            setTimeout(() => { btn.innerText = old; }, 1200);
+        } catch (e) {
+            const manual = prompt("Clipboard access restricted. Paste input here (Ctrl+V):");
+            if (manual) {
+                input.value = manual.trim();
+                if (triggerBracketRefresh) refreshSenderBrackets();
+            }
+        }
+    }
+</script>
+</body>
+</html>
