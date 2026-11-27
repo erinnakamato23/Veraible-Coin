@@ -11,6 +11,7 @@ import subprocess
 import tempfile
 import urllib.request
 import urllib.error
+from urllib.parse import urlparse
 from time import time, sleep
 from flask import Flask, jsonify, request, render_template, send_file
 import ecdsa
@@ -18,6 +19,11 @@ import threading
 import secrets
 import socket
 import uuid
+
+try:
+    import socks
+except ImportError:
+    socks = None
 
 try:
     import webview
@@ -42,6 +48,11 @@ if SERVER_MODE not in ("web", "desktop"):
 
 PRIMARY_DOMAIN = os.getenv("VCP_PRIMARY_DOMAIN", "https://veriable2.org").rstrip("/")
 
+# Optional generic SOCKS5 proxy configuration (disabled by default)
+SOCKS5_PROXY_HOST = os.getenv("VCP_PROXY_HOST", "").strip()
+SOCKS5_PROXY_PORT = int(os.getenv("VCP_PROXY_PORT", "9050"))
+PROXY_ENABLED = bool(SOCKS5_PROXY_HOST)
+
 if sys.platform == "win32":
     BASE_STORAGE_DIR = os.path.join(os.getenv("APPDATA", os.path.expanduser("~")), "VariableCoin")
 else:
@@ -60,21 +71,106 @@ SCRIPT_DIR = os.path.abspath(os.path.dirname(__file__))
 DESKTOP_ZIP_PATH = os.getenv("VCP_DESKTOP_ZIP", os.path.join(SCRIPT_DIR, "VariableCoin_Desktop.zip"))
 DESKTOP_EXE_PATH = os.getenv("VCP_DESKTOP_EXE", os.path.join(SCRIPT_DIR, "VariableCoin.exe"))
 
-DEFAULT_TCP_PORT = 6000
-DEFAULT_UDP_PORT = 6001
+DEFAULT_TCP_PORT = int(os.getenv("VCP_TCP_PORT", "6000"))
+DEFAULT_UDP_PORT = int(os.getenv("VCP_UDP_PORT", "6001"))
 DEFAULT_HTTP_PORT = int(os.getenv("VCP_HTTP_PORT", "5000"))
+DEFAULT_BIND_HOST = os.getenv("VCP_BIND_HOST", "0.0.0.0" if SERVER_MODE == "web" else "127.0.0.1").strip()
 
-PEER_RELAY_URLS = [
-    PRIMARY_DOMAIN
+_EXTRA_RELAYS = [
+    u.strip().rstrip("/")
+    for u in os.getenv("VCP_PEER_RELAYS", "").split(",")
+    if u.strip()
 ]
+PEER_RELAY_URLS = [PRIMARY_DOMAIN] + [u for u in _EXTRA_RELAYS if u != PRIMARY_DOMAIN]
 
 HEARTBEAT_INTERVAL_SEC = 30
 NODE_TIMEOUT_SEC = 90
-PEER_TIMEOUT_SEC = 5.0
+PEER_TIMEOUT_SEC = float(os.getenv("VCP_PEER_TIMEOUT", "10.0" if PROXY_ENABLED else "5.0"))
 RELAY_SYNC_INTERVAL_SEC = 30
 
 STORAGE_SAFETY_MARGIN_MB = 250
 THERMAL_TIME_THRESHOLD = 0.85
+
+
+# =====================================================================
+# NETWORK TRANSPORT LAYER (STANDARD HTTP/HTTPS & OPTIONAL SOCKS5)
+# =====================================================================
+class NetworkTransport:
+    """Handles JSON HTTP/HTTPS requests with optional SOCKS5 proxy support."""
+
+    @staticmethod
+    def is_onion_host(host_str):
+        return ".onion" in str(host_str or "").strip().lower()
+
+    @staticmethod
+    def _socks5_http_json(url, method="GET", payload=None, extra_headers=None, timeout=PEER_TIMEOUT_SEC):
+        if socks is None:
+            raise RuntimeError("PySocks is required for SOCKS5 proxy connections.")
+
+        parsed = urlparse(url)
+        host = parsed.hostname
+        port = parsed.port or (443 if parsed.scheme == "https" else 80)
+        path = parsed.path or "/"
+        if parsed.query:
+            path = f"{path}?{parsed.query}"
+
+        body_bytes = json.dumps(payload).encode("utf-8") if payload is not None else b""
+        headers = [
+            f"{method.upper()} {path} HTTP/1.1",
+            f"Host: {host}:{port}",
+            f"User-Agent: VariableCoinNode/{APP_VERSION}",
+            "Connection: close"
+        ]
+        if extra_headers:
+            for k, v in extra_headers.items():
+                headers.append(f"{k}: {v}")
+        if payload is not None:
+            headers.append("Content-Type: application/json")
+            headers.append(f"Content-Length: {len(body_bytes)}")
+
+        raw_request = ("\r\n".join(headers) + "\r\n\r\n").encode("utf-8") + body_bytes
+
+        sock = socks.socksocket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.set_proxy(socks.SOCKS5, SOCKS5_PROXY_HOST, SOCKS5_PROXY_PORT, rdns=True)
+        sock.settimeout(timeout)
+        try:
+            sock.connect((host, port))
+            sock.sendall(raw_request)
+            chunks = []
+            while True:
+                data = sock.recv(4096)
+                if not data:
+                    break
+                chunks.append(data)
+        finally:
+            sock.close()
+
+        raw_response = b"".join(chunks)
+        _, _, body_part = raw_response.partition(b"\r\n\r\n")
+        if not body_part:
+            return {}
+        return json.loads(body_part.decode("utf-8", errors="ignore"))
+
+    @staticmethod
+    def request_json(url, method="GET", payload=None, extra_headers=None, timeout=PEER_TIMEOUT_SEC):
+        parsed = urlparse(url)
+        if PROXY_ENABLED and (NetworkTransport.is_onion_host(parsed.hostname) or parsed.scheme == "http"):
+            return NetworkTransport._socks5_http_json(
+                url, method=method, payload=payload, extra_headers=extra_headers, timeout=timeout
+            )
+
+        req_headers = {"User-Agent": f"VariableCoinNode/{APP_VERSION}"}
+        if extra_headers:
+            req_headers.update(extra_headers)
+
+        req_data = None
+        if payload is not None:
+            req_data = json.dumps(payload).encode("utf-8")
+            req_headers["Content-Type"] = "application/json"
+
+        req = urllib.request.Request(url, data=req_data, headers=req_headers, method=method.upper())
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            return json.loads(resp.read().decode("utf-8"))
 
 
 # =====================================================================
@@ -107,13 +203,11 @@ class AutoUpdater:
             return False
 
         try:
-            req = urllib.request.Request(
+            info = NetworkTransport.request_json(
                 f"{PRIMARY_DOMAIN}/api/version",
-                headers={"User-Agent": f"VariableCoinNode/{APP_VERSION}"},
-                method="GET"
+                method="GET",
+                timeout=PEER_TIMEOUT_SEC
             )
-            with urllib.request.urlopen(req, timeout=PEER_TIMEOUT_SEC) as resp:
-                info = json.loads(resp.read().decode("utf-8"))
         except Exception:
             return False
 
@@ -123,7 +217,6 @@ class AutoUpdater:
         if not VersionManager.is_update_available(APP_VERSION, latest_version):
             return False
 
-        # Only self-replace when running as a compiled Windows executable
         if not getattr(sys, "frozen", False) or sys.platform != "win32":
             print(f"[UPDATER] New version {latest_version} available at {download_url}")
             return False
@@ -268,9 +361,8 @@ class NodeIdentityAndUPnPManager:
             except Exception:
                 pass
 
-        hw_mac = hex(uuid.getnode())
-        random_salt = secrets.token_hex(8)
-        raw_id = hashlib.sha256(f"VARIABLE_NODE_ID_{hw_mac}_{random_salt}".encode("utf-8")).hexdigest()[:24]
+        random_salt = secrets.token_hex(16)
+        raw_id = hashlib.sha256(f"VARIABLE_NODE_ID_{random_salt}".encode("utf-8")).hexdigest()[:24]
         node_id = f"NODE_{raw_id.upper()}"
 
         try:
@@ -293,6 +385,9 @@ class NodeIdentityAndUPnPManager:
             "udp_port": udp_port,
             "status_message": "UPnP module not installed or router does not support UPnP."
         }
+        if PROXY_ENABLED:
+            result["status_message"] = "UPnP skipped while SOCKS5 proxy mode is active."
+            return result
         if miniupnpc is None or SERVER_MODE == "web":
             if SERVER_MODE == "web":
                 result["status_message"] = "UPnP skipped in web server mode."
@@ -1362,32 +1457,22 @@ def get_valid_relay_urls():
 
 
 def http_post_json(url, payload, timeout=PEER_TIMEOUT_SEC):
-    data = json.dumps(payload).encode("utf-8")
-    req = urllib.request.Request(
+    return NetworkTransport.request_json(
         url,
-        data=data,
-        headers={
-            "Content-Type": "application/json",
-            "User-Agent": f"VariableCoinNode/{APP_VERSION}",
-            "X-VCP-Version": APP_VERSION
-        },
-        method="POST"
+        method="POST",
+        payload=payload,
+        extra_headers={"X-VCP-Version": APP_VERSION},
+        timeout=timeout
     )
-    with urllib.request.urlopen(req, timeout=timeout) as resp:
-        return json.loads(resp.read().decode("utf-8"))
 
 
 def http_get_json(url, timeout=PEER_TIMEOUT_SEC):
-    req = urllib.request.Request(
+    return NetworkTransport.request_json(
         url,
-        headers={
-            "User-Agent": f"VariableCoinNode/{APP_VERSION}",
-            "X-VCP-Version": APP_VERSION
-        },
-        method="GET"
+        method="GET",
+        extra_headers={"X-VCP-Version": APP_VERSION},
+        timeout=timeout
     )
-    with urllib.request.urlopen(req, timeout=timeout) as resp:
-        return json.loads(resp.read().decode("utf-8"))
 
 
 def send_heartbeat_to_relays():
@@ -1509,8 +1594,9 @@ def require_supported_version(payload=None):
 
 @app.route("/")
 def index():
-    return render_template("index.html", server_mode=SERVER_MODE, app_version=APP_VERSION)
-
+    if os.environ.get("VCP_SERVER_MODE") == "web":
+        return render_template("web.html")
+    return render_template("app.html")
 
 @app.route("/api/version", methods=["GET"])
 def api_version():
@@ -2077,6 +2163,10 @@ def background_p2p_daemon():
         sleep(HEARTBEAT_INTERVAL_SEC)
 
 
+def start_flask_server(bind_host, bind_port):
+    app.run(host=bind_host, port=bind_port, debug=False, threaded=True, use_reloader=False)
+
+
 if __name__ == "__main__":
     if SERVER_MODE == "desktop":
         AutoUpdater.check_and_apply_update()
@@ -2091,17 +2181,16 @@ if __name__ == "__main__":
     p2p_thread.start()
 
     if SERVER_MODE == "web":
-        print(f"[SERVER START] Public Web Portal & Relay Node running on 0.0.0.0:{DEFAULT_HTTP_PORT}")
-        print("[TIP] For production, run behind Nginx + Gunicorn (Linux) or Waitress (Windows).")
-        app.run(host="0.0.0.0", port=DEFAULT_HTTP_PORT, debug=False, threaded=True)
+        print(f"[SERVER START] Public Web Portal & Relay Node running on {DEFAULT_BIND_HOST}:{DEFAULT_HTTP_PORT}")
+        start_flask_server(DEFAULT_BIND_HOST, DEFAULT_HTTP_PORT)
     else:
-        print(f"[SERVER START] Local Desktop Node running on http://127.0.0.1:{DEFAULT_HTTP_PORT}")
-
-        def start_server():
-            app.run(host="127.0.0.1", port=DEFAULT_HTTP_PORT, debug=False, threaded=True, use_reloader=False)
-
-        threading.Thread(target=start_server, daemon=True).start()
-        if webview is not None:
+        print(f"[SERVER START] Local Desktop Node running on http://{DEFAULT_BIND_HOST}:{DEFAULT_HTTP_PORT}")
+        if webview is not None and not os.getenv("VCP_HEADLESS"):
+            threading.Thread(
+                target=start_flask_server,
+                args=(DEFAULT_BIND_HOST, DEFAULT_HTTP_PORT),
+                daemon=True
+            ).start()
             webview.create_window(
                 "Variable Coin Protocol Center",
                 f"http://127.0.0.1:{DEFAULT_HTTP_PORT}",
@@ -2110,4 +2199,4 @@ if __name__ == "__main__":
             )
             webview.start()
         else:
-            start_server()
+            start_flask_server(DEFAULT_BIND_HOST, DEFAULT_HTTP_PORT)
