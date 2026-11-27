@@ -83,6 +83,38 @@
             flex-wrap: wrap;
         }
 
+        .download-btn {
+            background-color: #238636;
+            color: #ffffff !important;
+            padding: 8px 16px;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 6px;
+            font-size: 13px;
+            display: inline-block;
+            text-transform: uppercase;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: 0.2s ease-in-out;
+        }
+
+        .download-btn:hover {
+            background-color: #2ea043;
+            transform: translateY(-1px);
+        }
+
+        .web-mode-banner {
+            background: linear-gradient(135deg, rgba(31, 111, 235, 0.16), rgba(137, 87, 229, 0.16));
+            border: 1px solid #388bfd;
+            border-radius: 10px;
+            padding: 18px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
         .card {
             background-color: #161b22;
             border: 1px solid #30363d;
@@ -401,6 +433,16 @@
             border: 1px solid #30363d;
             color: #58a6ff;
         }
+
+        {% if server_mode == 'web' %}
+        .desktop-only {
+            display: none !important;
+        }
+        {% else %}
+        .web-only {
+            display: none !important;
+        }
+        {% endif %}
     </style>
 </head>
 <body>
@@ -410,13 +452,51 @@
         <div>
             <h1 style="font-size: 22px;">Variable Coin Protocol Center</h1>
             <p style="color: #8b949e; margin: 0; font-size: 13px;">
+                {% if server_mode == 'web' %}
+                Public Explorer &amp; Desktop Node Portal (Read-Only Mode)
+                {% else %}
                 Local Sovereign Desktop Node (127.0.0.1)
+                {% endif %}
             </p>
         </div>
         <div class="header-controls">
             <button class="btn-blue" onclick="openWhitepaperModal()" style="width: auto; padding: 8px 16px; margin: 0; background-color: #8957e5;">WHITEPAPER</button>
+            <a href="/download" class="download-btn" title="Download standalone Windows desktop node">DOWNLOAD NODE (.ZIP)</a>
             <div id="google_translate_element"></div>
             <button class="btn-blue" onclick="refreshNetwork()" style="width: auto; padding: 8px 16px; margin: 0;">REFRESH</button>
+        </div>
+    </div>
+
+    <!-- WEB MODE INFO BANNER -->
+    <div class="web-mode-banner web-only">
+        <div style="flex: 1; min-width: 260px;">
+            <strong style="color: #58a6ff; font-size: 14px; display: block; margin-bottom: 4px;">
+                Security-First Architecture: Mining &amp; Private Key Operations Run Locally
+            </strong>
+            <span style="color: #c9d1d9; font-size: 12.5px; line-height: 1.5; display: block;">
+                This public web portal is strictly read-only so your private keys never leave your device. To generate wallets, mine blocks, transfer assets, or execute protocol actions, download and run the sovereign Desktop Node.
+            </span>
+        </div>
+        <a href="/download" class="download-btn" style="padding: 12px 20px; font-size: 13px;">DOWNLOAD DESKTOP NODE (.ZIP)</a>
+    </div>
+
+    <!-- SECURITY ADVISORY -->
+    <div id="security-advisory" style="background: rgba(22, 27, 34, 0.95); border: 1px solid #388bfd; border-left: 5px solid #238636; border-radius: 8px; padding: 14px 18px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 280px;">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                    <strong style="color: #58a6ff; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">Security &amp; Desktop Node Launch Guide (100% Open-Source &amp; Safe)</strong>
+                </div>
+                <p style="margin: 0 0 8px 0; color: #c9d1d9; font-size: 12.5px; line-height: 1.5;">
+                    Variable Coin Protocol is an independent, open-source blockchain daemon. Because standalone binaries lack commercial digital certificates, Windows Defender or antivirus programs may show standard security prompts upon initial launch. <strong>This is a false positive and completely safe.</strong>
+                </p>
+                <div style="background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 10px 12px; font-size: 12px; color: #8b949e; line-height: 1.6;">
+                    <span style="color: #d29922; font-weight: bold;">Recommended Launch Configuration:</span><br>
+                    1. <strong>Windows SmartScreen:</strong> If prompted with <em>"Windows protected your PC"</em>, click <strong>"More info"</strong> &rarr; <strong>"Run anyway"</strong>.<br>
+                    2. <strong>Windows Firewall:</strong> When the network prompt appears, check <strong>BOTH boxes</strong> (<em>Private networks</em> and <em>Public networks</em>) and click <strong>"Allow access"</strong>. If skipped or cancelled, the node automatically activates <strong>Bitcoin-style outbound sync</strong> to maintain full mining and ledger capabilities without interruption.
+                </div>
+            </div>
+            <button onclick="document.getElementById('security-advisory').style.display='none'" style="width: auto; padding: 6px 12px; margin: 0; background: #21262d; border: 1px solid #30363d; color: #c9d1d9; border-radius: 6px; font-size: 11px; cursor: pointer; white-space: nowrap;">DISMISS</button>
         </div>
     </div>
 
@@ -433,8 +513,8 @@
         </div>
     </div>
 
-    <!-- COMMAND CENTER -->
-    <div class="card shield-center">
+    <!-- COMMAND CENTER (DESKTOP ONLY) -->
+    <div class="card shield-center desktop-only">
         <h2 style="color: #a371f7 !important;">Variable Coin Command Center</h2>
         <p style="color: #8b949e; font-size: 13px;">Modulate protocol parameters by selectively burning Shield tokens by tier. Supply actions apply globally; price stabilization actions can be applied personally or globally.</p>
 
@@ -500,7 +580,7 @@
         <div class="card">
             <h2>Wallet &amp; Inventory Hub</h2>
 
-            <div>
+            <div class="desktop-only">
                 <button onclick="createWallet()">GENERATE 256-BIT MASTER WALLET</button>
                 
                 <div id="wallet-keys" style="display: none; margin-top: 15px;">
@@ -586,8 +666,8 @@
             </div>
         </div>
 
-        <!-- MINING HUB -->
-        <div class="card">
+        <!-- MINING HUB (DESKTOP ONLY) -->
+        <div class="card desktop-only">
             <h2>Mining Hub</h2>
             <p style="color: #8b949e; font-size: 13px;">Proof-of-work resolved across the infinite variable space. Each minted Shield Coin permanently seals its inception impact power.</p>
             
@@ -610,8 +690,8 @@
 
     <!-- TRANSFER & TRANSACTION HISTORY -->
     <div class="grid-2">
-        <!-- TRANSFER HUB -->
-        <div class="card">
+        <!-- TRANSFER HUB (DESKTOP ONLY) -->
+        <div class="card desktop-only">
             <h2>Transfer &amp; Send Hub</h2>
             <p style="color: #8b949e; font-size: 13px;">Send Main Coin or Shield Coin units directly to another peer wallet with SECP256k1 signature verification.</p>
 
@@ -750,7 +830,7 @@
 
 <script>
     const API = window.location.origin;
-    const SERVER_MODE = "desktop";
+    const SERVER_MODE = "{{ server_mode | default('desktop') }}";
     let activeAction = null;
 
     window.onload = refreshNetwork;
@@ -893,6 +973,7 @@
     }
 
     async function createWallet() {
+        if (SERVER_MODE === 'web') return;
         try {
             const res = await fetch(`${API}/wallet/new`);
             const data = await res.json();
@@ -906,6 +987,7 @@
     }
 
     async function recoverWallet() {
+        if (SERVER_MODE === 'web') return;
         const privKey = document.getElementById('rec-priv').value.trim();
         if (!privKey) return alert("Please enter your 64-character 256-bit Private Key.");
 
@@ -1023,6 +1105,7 @@
     }
 
     async function startMining() {
+        if (SERVER_MODE === 'web') return;
         const addr = document.getElementById('mine-addr').value.trim();
         const coin = document.getElementById('mine-type').value;
         const btn = document.getElementById('btn-mine');
@@ -1071,6 +1154,7 @@
     }
 
     async function sendTransaction(acceptClosest = false) {
+        if (SERVER_MODE === 'web') return;
         const sender = document.getElementById('tx-sender').value.trim();
         const privKey = document.getElementById('tx-priv').value.trim();
         const recipient = document.getElementById('tx-recipient').value.trim();
@@ -1149,6 +1233,7 @@
     }
 
     async function executeCommand() {
+        if (SERVER_MODE === 'web') return;
         const addr = document.getElementById('cmd-addr').value.trim();
         const privKey = document.getElementById('cmd-priv').value.trim();
         const targetTier = document.getElementById('cmd-tier').value;
